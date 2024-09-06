@@ -1,0 +1,9 @@
+tidyverse
+package.skeleton()
+package.skeleton(tidyverse)
+library(tidyverse)
+install.packages(tidyverse)
+packageSlot()
+%>% }
+install.packages("tidyverse")
+library(tidyverse)
