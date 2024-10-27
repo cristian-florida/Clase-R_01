@@ -26,3 +26,44 @@ You can add options to executable code like this
 ```
 
 The `echo: false` option disables the printing of code (only output is displayed).
+
+#FB
+
+```{r}
+library(readxl)
+
+data <- read_excel("eficiencia de riego papa.xlsx")
+head(data)
+```
+
+# Modelo lineal 
+
+```{r}
+modelo <- lm(formula = lfa ~ block + geno + riego + riego*geno, data = data)
+ 
+
+anova(modelo)
+
+```
+
+# Blox plot
+
+```{r}
+install.packages("ggplot2")
+library (ggplot2)
+ggplot(data, aes(x = block, y = lfa, fill = block)) +
+  geom_boxplot(outlier.colour = "red", outlier.shape = 16, outlier.size = 2) +  # Personaliza los outliers
+  geom_jitter(width = 0.2, alpha = 0.5) +  # Añade puntos de datos con un poco de dispersión
+  labs(title = "Box Plot de lfa por Block", x = "Block", y = "lfa") +
+  theme_minimal()
+
+```
+
+#Grafico
+
+```{r}
+ggplot(data, aes(x = factor(geno), y = lfa, fill = factor(riego))) +
+  geom_boxplot() +
+  labs(title = "Box Plot de lfa por Genotipo", x = "Genotipo", y = "lfa") +
+  theme_minimal()
+```

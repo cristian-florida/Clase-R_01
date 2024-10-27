@@ -58,16 +58,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="CRFG_files/libs/clipboard/clipboard.min.js"></script>
-<script src="CRFG_files/libs/quarto-html/quarto.js"></script>
-<script src="CRFG_files/libs/quarto-html/popper.min.js"></script>
-<script src="CRFG_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="CRFG_files/libs/quarto-html/anchor.min.js"></script>
-<link href="CRFG_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="CRFG_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="CRFG_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="CRFG_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="CRFG_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="Anova_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Anova_files/libs/quarto-html/quarto.js"></script>
+<script src="Anova_files/libs/quarto-html/popper.min.js"></script>
+<script src="Anova_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Anova_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Anova_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Anova_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Anova_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Anova_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Anova_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -123,6 +123,331 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The <code>echo: false</code> option disables the printing of code (only output is displayed).</p>
+<p>#FB</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"eficiencia de riego papa.xlsx"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 18
+  riego    geno  block bloque spad_29 spad_83 rwc_84 op_84 leafdw stemdw rootdw
+  &lt;chr&gt;    &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 sequia   G01       2 II        56.3    41.1   61.5 -2.43  13.3   14.9    3.83
+2 sequia   G02       4 IV        52.7    47.9   63.2 -3.03   9.42   8.63   2.1 
+3 irrigado G01       3 III       49.2    41.6   67.7 -2.5   18.2   24.2    3.16
+4 sequia   G02       1 I         55.5    44.2   64.9 -2.4    8.84   6.58   2   
+5 irrigado G03       2 II        58.2    32.6   74.5 -2.27  14.6   12.6    1.83
+6 irrigado G04       5 V         43.5    37.8   74.0 -2.37  19.8   17.5    2.83
+# ℹ 7 more variables: tubdw &lt;dbl&gt;, biomdw &lt;dbl&gt;, hi &lt;dbl&gt;, ttrans &lt;dbl&gt;,
+#   wue &lt;dbl&gt;, twue &lt;dbl&gt;, lfa &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="modelo-lineal" class="level1">
+<h1>Modelo lineal</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>modelo <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> lfa <span class="sc">~</span> block <span class="sc">+</span> geno <span class="sc">+</span> riego <span class="sc">+</span> riego<span class="sc">*</span>geno, <span class="at">data =</span> data)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(modelo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: lfa
+            Df    Sum Sq   Mean Sq  F value Pr(&gt;F)    
+block        1   1148369   1148369    2.068  0.153    
+geno        14 261742780  18695913   33.668 &lt;2e-16 ***
+riego        1 788562704 788562704 1420.068 &lt;2e-16 ***
+geno:riego  14 108153220   7725230   13.912 &lt;2e-16 ***
+Residuals  119  66080618    555299                    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+</section>
+<section id="blox-plot" class="level1">
+<h1>Blox plot</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">"ggplot2"</span>, <span class="at">repos =</span> <span class="st">"https://cloud.r-project.org/"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Installing package into 'C:/Users/Usuario/AppData/Local/R/win-library/4.4'
+(as 'lib' is unspecified)</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>package 'ggplot2' successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+    C:\Users\Usuario\AppData\Local\Temp\RtmpKSxbrM\downloaded_packages</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (ggplot2)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> block, <span class="at">y =</span> lfa, <span class="at">fill =</span> block)) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.colour =</span> <span class="st">"red"</span>, <span class="at">outlier.shape =</span> <span class="dv">16</span>, <span class="at">outlier.size =</span> <span class="dv">2</span>) <span class="sc">+</span>  <span class="co"># Personaliza los outliers</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span>  <span class="co"># Añade puntos de datos con un poco de dispersión</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Box Plot de lfa por Block"</span>, <span class="at">x =</span> <span class="st">"Block"</span>, <span class="at">y =</span> <span class="st">"lfa"</span>) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Continuous x aesthetic
+ℹ did you forget `aes(group = ...)`?</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The following aesthetics were dropped during statistical transformation: fill.
+ℹ This can happen when ggplot fails to infer the correct grouping structure in
+  the data.
+ℹ Did you forget to specify a `group` aesthetic or to convert a numerical
+  variable into a factor?</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Anova_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>#Grafico</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(geno), <span class="at">y =</span> lfa, <span class="at">fill =</span> <span class="fu">factor</span>(riego))) <span class="sc">+</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Box Plot de lfa por Genotipo"</span>, <span class="at">x =</span> <span class="st">"Genotipo"</span>, <span class="at">y =</span> <span class="st">"lfa"</span>) <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Anova_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>#Clase 2 de analisis de datos</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"pkgdown"</span>, <span class="at">repos =</span> <span class="st">"https://cloud.r-project.org/"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Installing package into 'C:/Users/Usuario/AppData/Local/R/win-library/4.4'
+(as 'lib' is unspecified)</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>package 'pkgdown' successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+    C:\Users\Usuario\AppData\Local\Temp\RtmpKSxbrM\downloaded_packages</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run once to configure your package to use and deploy pkgdown</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span>use_pkgdown</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>function (config_file = "_pkgdown.yml", destdir = "docs") 
+{
+    check_is_package("use_pkgdown()")
+    check_installed("pkgdown")
+    use_build_ignore(c(config_file, destdir, "pkgdown"))
+    use_git_ignore(destdir)
+    config &lt;- pkgdown_config(destdir)
+    config_path &lt;- proj_path(config_file)
+    write_over(config_path, yaml::as.yaml(config))
+    edit_file(config_path)
+    invisible(TRUE)
+}
+&lt;bytecode: 0x0000029391ca1958&gt;
+&lt;environment: namespace:usethis&gt;</code></pre>
+</div>
+</div>
+<pre><code></code></pre>
+<section id="comparación-de-medias" class="level2">
+<h2 class="anchored" data-anchor-id="comparación-de-medias">Comparación de Medias</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(agricolae)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>data </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 150 × 18
+   riego    geno  block bloque spad_29 spad_83 rwc_84 op_84 leafdw stemdw rootdw
+   &lt;chr&gt;    &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+ 1 sequia   G01       2 II        56.3    41.1   61.5 -2.43  13.3   14.9    3.83
+ 2 sequia   G02       4 IV        52.7    47.9   63.2 -3.03   9.42   8.63   2.1 
+ 3 irrigado G01       3 III       49.2    41.6   67.7 -2.5   18.2   24.2    3.16
+ 4 sequia   G02       1 I         55.5    44.2   64.9 -2.4    8.84   6.58   2   
+ 5 irrigado G03       2 II        58.2    32.6   74.5 -2.27  14.6   12.6    1.83
+ 6 irrigado G04       5 V         43.5    37.8   74.0 -2.37  19.8   17.5    2.83
+ 7 irrigado G01       1 I         57.4    42.5   72.7 -1.77  15.0   15.3    2.28
+ 8 irrigado G05       4 IV        56.1    35.9   72.8 -2.33  19.9   14.6    3.65
+ 9 sequia   G06       2 II        61      57.5   59.8 -3.23  19.9   21.2    4.04
+10 sequia   G05       1 I         60.3    41.8   50.8 -2.87  12.3   11.1    4.17
+# ℹ 140 more rows
+# ℹ 7 more variables: tubdw &lt;dbl&gt;, biomdw &lt;dbl&gt;, hi &lt;dbl&gt;, ttrans &lt;dbl&gt;,
+#   wue &lt;dbl&gt;, twue &lt;dbl&gt;, lfa &lt;dbl&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 150 × 18
+   riego    geno  block bloque spad_29 spad_83 rwc_84 op_84 leafdw stemdw rootdw
+   &lt;chr&gt;    &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+ 1 sequia   G01       2 II        56.3    41.1   61.5 -2.43  13.3   14.9    3.83
+ 2 sequia   G02       4 IV        52.7    47.9   63.2 -3.03   9.42   8.63   2.1 
+ 3 irrigado G01       3 III       49.2    41.6   67.7 -2.5   18.2   24.2    3.16
+ 4 sequia   G02       1 I         55.5    44.2   64.9 -2.4    8.84   6.58   2   
+ 5 irrigado G03       2 II        58.2    32.6   74.5 -2.27  14.6   12.6    1.83
+ 6 irrigado G04       5 V         43.5    37.8   74.0 -2.37  19.8   17.5    2.83
+ 7 irrigado G01       1 I         57.4    42.5   72.7 -1.77  15.0   15.3    2.28
+ 8 irrigado G05       4 IV        56.1    35.9   72.8 -2.33  19.9   14.6    3.65
+ 9 sequia   G06       2 II        61      57.5   59.8 -3.23  19.9   21.2    4.04
+10 sequia   G05       1 I         60.3    41.8   50.8 -2.87  12.3   11.1    4.17
+# ℹ 140 more rows
+# ℹ 7 more variables: tubdw &lt;dbl&gt;, biomdw &lt;dbl&gt;, hi &lt;dbl&gt;, ttrans &lt;dbl&gt;,
+#   wue &lt;dbl&gt;, twue &lt;dbl&gt;, lfa &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "riego"   "geno"    "block"   "bloque"  "spad_29" "spad_83" "rwc_84" 
+ [8] "op_84"   "leafdw"  "stemdw"  "rootdw"  "tubdw"   "biomdw"  "hi"     
+[15] "ttrans"  "wue"     "twue"    "lfa"    </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Asegúrate de que la variable de tratamiento es un factor</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>riego <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(data<span class="sc">$</span>riego)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajuste del modelo</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>modelo <span class="ot">&lt;-</span> <span class="fu">aov</span>(spad_29 <span class="sc">~</span> riego, <span class="at">data =</span> data)  <span class="co"># Cambia spad_29 por otra variable si es necesario</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             Df Sum Sq Mean Sq F value Pr(&gt;F)
+riego         1     13   12.87   0.526   0.47
+Residuals   148   3623   24.48               </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>tukey_result <span class="ot">&lt;-</span> <span class="fu">HSD.test</span>(modelo, <span class="st">"riego"</span>, <span class="at">group =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(tukey_result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$statistics
+   MSerror  Df     Mean       CV     MSD
+  24.48249 148 56.36487 8.778479 1.59671
+
+$parameters
+   test name.t ntr StudentizedRange alpha
+  Tukey  riego   2         2.794659  0.05
+
+$means
+          spad_29     std  r        se  Min  Max  Q25  Q50  Q75
+irrigado 56.65773 4.97906 75 0.5713433 43.5 64.9 53.6 57.2 60.6
+sequia   56.07200 4.91670 75 0.5713433 43.9 65.5 53.2 56.5 59.4
+
+$comparison
+NULL
+
+$groups
+          spad_29 groups
+irrigado 56.65773      a
+sequia   56.07200      a
+
+attr(,"class")
+[1] "group"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">repos =</span> <span class="fu">c</span>(<span class="at">CRAN =</span> <span class="st">"https://cloud.r-project.org/"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cargar librerías si es necesario</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear el boxplot</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(riego), <span class="at">y =</span> spad_83)) <span class="sc">+</span>  <span class="co"># Asegúrate de que "spad_29" sea el nombre correcto</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"lightblue"</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Tratamiento de Riego"</span>) <span class="sc">+</span> </span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Valores de SPAD 29"</span>) <span class="sc">+</span> </span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Distribución de SPAD 83 por Tratamientos de Riego"</span>) <span class="sc">+</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()  <span class="co"># Elimina el argumento base_rect_size que no está definido</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Anova_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Asegúrate de que los paquetes están cargados</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"eficiencia de riego papa.xlsx"</span>)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 18
+  riego    geno  block bloque spad_29 spad_83 rwc_84 op_84 leafdw stemdw rootdw
+  &lt;chr&gt;    &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 sequia   G01       2 II        56.3    41.1   61.5 -2.43  13.3   14.9    3.83
+2 sequia   G02       4 IV        52.7    47.9   63.2 -3.03   9.42   8.63   2.1 
+3 irrigado G01       3 III       49.2    41.6   67.7 -2.5   18.2   24.2    3.16
+4 sequia   G02       1 I         55.5    44.2   64.9 -2.4    8.84   6.58   2   
+5 irrigado G03       2 II        58.2    32.6   74.5 -2.27  14.6   12.6    1.83
+6 irrigado G04       5 V         43.5    37.8   74.0 -2.37  19.8   17.5    2.83
+# ℹ 7 more variables: tubdw &lt;dbl&gt;, biomdw &lt;dbl&gt;, hi &lt;dbl&gt;, ttrans &lt;dbl&gt;,
+#   wue &lt;dbl&gt;, twue &lt;dbl&gt;, lfa &lt;dbl&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Verificar la estructura</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [150 × 18] (S3: tbl_df/tbl/data.frame)
+ $ riego  : chr [1:150] "sequia" "sequia" "irrigado" "sequia" ...
+ $ geno   : chr [1:150] "G01" "G02" "G01" "G02" ...
+ $ block  : num [1:150] 2 4 3 1 2 5 1 4 2 1 ...
+ $ bloque : chr [1:150] "II" "IV" "III" "I" ...
+ $ spad_29: num [1:150] 56.3 52.7 49.2 55.5 58.2 43.5 57.4 56.1 61 60.3 ...
+ $ spad_83: num [1:150] 41.1 47.9 41.6 44.2 32.6 37.8 42.5 35.9 57.5 41.8 ...
+ $ rwc_84 : num [1:150] 61.5 63.2 67.7 64.9 74.5 ...
+ $ op_84  : num [1:150] -2.43 -3.03 -2.5 -2.4 -2.27 -2.37 -1.77 -2.33 -3.23 -2.87 ...
+ $ leafdw : num [1:150] 13.28 9.42 18.22 8.84 14.55 ...
+ $ stemdw : num [1:150] 14.87 8.63 24.19 6.58 12.63 ...
+ $ rootdw : num [1:150] 3.83 2.1 3.16 2 1.83 2.83 2.28 3.65 4.04 4.17 ...
+ $ tubdw  : num [1:150] 19.8 17.7 38 13.5 51.1 ...
+ $ biomdw : num [1:150] 51.8 37.8 83.6 30.9 80.2 ...
+ $ hi     : num [1:150] 0.45 0.43 0.45 0.44 0.64 0.61 0.41 0.57 0.05 0.51 ...
+ $ ttrans : num [1:150] 4.5 3.54 8.39 2.9 7.37 ...
+ $ wue    : num [1:150] 11.51 10.69 9.97 10.65 10.88 ...
+ $ twue   : num [1:150] 4.4 4.99 4.53 4.65 6.94 6.23 3.51 5.55 0.54 5.57 ...
+ $ lfa    : num [1:150] 2900 2619 7579 2450 5413 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Gráfico en ggplot2</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> geno, <span class="at">y =</span> lfa, <span class="at">fill =</span> riego)) <span class="sc">+</span> </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>()) <span class="sc">+</span> </span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(lfa, <span class="dv">1</span>)), <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="fl">0.9</span>), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Geno"</span>, <span class="at">y =</span> <span class="st">"LFA"</span>, <span class="at">fill =</span> <span class="st">"Riego"</span>) <span class="sc">+</span> </span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Anova_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><img src="images/clipboard-4271632721.png" class="img-fluid"></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"emmeans"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Installing package into 'C:/Users/Usuario/AppData/Local/R/win-library/4.4'
+(as 'lib' is unspecified)</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>package 'emmeans' successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+    C:\Users\Usuario\AppData\Local\Temp\RtmpKSxbrM\downloaded_packages</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Welcome to emmeans.
+Caution: You lose important information if you filter this package's results.
+See '? untidy'</code></pre>
+</div>
+</div>
+</section>
 </section>
 
 </main>

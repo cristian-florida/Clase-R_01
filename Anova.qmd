@@ -1,0 +1,165 @@
+---
+title: "Florida_web"
+author: "Cristian Ruben Florida Garcia"
+format: html
+editor: visual
+output-file: index
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+#FB
+
+```{r}
+library(readxl)
+
+data <- read_excel("eficiencia de riego papa.xlsx")
+head(data)
+```
+
+# Modelo lineal
+
+```{r}
+modelo <- lm(formula = lfa ~ block + geno + riego + riego*geno, data = data)
+ 
+
+anova(modelo)
+
+```
+
+# Blox plot
+
+```{r}
+  install.packages("ggplot2", repos = "https://cloud.r-project.org/")
+
+library (ggplot2)
+ggplot(data, aes(x = block, y = lfa, fill = block)) +
+  geom_boxplot(outlier.colour = "red", outlier.shape = 16, outlier.size = 2) +  # Personaliza los outliers
+  geom_jitter(width = 0.2, alpha = 0.5) +  # Añade puntos de datos con un poco de dispersión
+  labs(title = "Box Plot de lfa por Block", x = "Block", y = "lfa") +
+  theme_minimal()
+
+```
+
+#Grafico
+
+```{r}
+ggplot(data, aes(x = factor(geno), y = lfa, fill = factor(riego))) +
+  geom_boxplot() +
+  labs(title = "Box Plot de lfa por Genotipo", x = "Genotipo", y = "lfa") +
+  theme_minimal()
+```
+
+#Clase 2 de analisis de datos
+
+```{r}
+install.packages("pkgdown", repos = "https://cloud.r-project.org/")
+
+
+```
+
+```{r}
+# Run once to configure your package to use and deploy pkgdown
+usethis::use_pkgdown
+```
+
+```         
+```
+
+## Comparación de Medias
+
+```{r}
+library(agricolae)
+data 
+data
+
+```
+
+```{r}
+colnames(data) 
+```
+
+```{r}
+# Asegúrate de que la variable de tratamiento es un factor
+data$riego <- as.factor(data$riego)
+
+# Ajuste del modelo
+modelo <- aov(spad_29 ~ riego, data = data)  # Cambia spad_29 por otra variable si es necesario
+summary(modelo)
+
+
+
+```
+
+```{r}
+tukey_result <- HSD.test(modelo, "riego", group = TRUE)
+print(tukey_result)
+
+```
+
+```{r}
+options(repos = c(CRAN = "https://cloud.r-project.org/"))
+
+```
+
+```{r}
+# Cargar librerías si es necesario
+library(ggplot2)
+
+# Crear el boxplot
+ggplot(data, aes(x = factor(riego), y = spad_83)) +  # Asegúrate de que "spad_29" sea el nombre correcto
+  geom_boxplot(fill = "lightblue", color = "darkblue") +
+  xlab("Tratamiento de Riego") + 
+  ylab("Valores de SPAD 29") + 
+  ggtitle("Distribución de SPAD 83 por Tratamientos de Riego") +
+  theme_minimal()  # Elimina el argumento base_rect_size que no está definido
+
+
+```
+
+```{r}
+# Asegúrate de que los paquetes están cargados
+library(readxl)
+library(ggplot2)
+
+data <- read_excel("eficiencia de riego papa.xlsx")
+head(data)
+
+
+# Verificar la estructura
+str(data)
+
+### Gráfico en ggplot2
+ggplot(data, aes(x = geno, y = lfa, fill = riego)) + 
+  geom_col(position = position_dodge()) + 
+  geom_text(aes(label = round(lfa, 1)), position = position_dodge(0.9), vjust = -0.5) + 
+  labs(x = "Geno", y = "LFA", fill = "Riego") + 
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+![](images/clipboard-4271632721.png)
+
+```{r}
+install.packages("emmeans")
+library(emmeans)
+```
