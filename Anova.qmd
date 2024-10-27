@@ -63,103 +63,86 @@ ggplot(data, aes(x = block, y = lfa, fill = block)) +
 #Grafico
 
 ```{r}
-ggplot(data, aes(x = factor(geno), y = lfa, fill = factor(riego))) +
-  geom_boxplot() +
-  labs(title = "Box Plot de lfa por Genotipo", x = "Genotipo", y = "lfa") +
-  theme_minimal()
-```
-
-#Clase 2 de analisis de datos
-
-```{r}
-install.packages("pkgdown", repos = "https://cloud.r-project.org/")
-
 
 ```
 
 ```{r}
-# Run once to configure your package to use and deploy pkgdown
-usethis::use_pkgdown
-```
-
-```         
-```
-
-## Comparación de Medias
-
-```{r}
-library(agricolae)
-data 
-data
 
 ```
 
-```{r}
-colnames(data) 
-```
-
-```{r}
-# Asegúrate de que la variable de tratamiento es un factor
-data$riego <- as.factor(data$riego)
-
-# Ajuste del modelo
-modelo <- aov(spad_29 ~ riego, data = data)  # Cambia spad_29 por otra variable si es necesario
-summary(modelo)
-
-
-
-```
-
-```{r}
-tukey_result <- HSD.test(modelo, "riego", group = TRUE)
-print(tukey_result)
-
-```
+## 2- Comparación de medias
 
 ```{r}
 options(repos = c(CRAN = "https://cloud.r-project.org/"))
-
+install.packages("agricolae")
 ```
 
 ```{r}
-# Cargar librerías si es necesario
-library(ggplot2)
-
-# Crear el boxplot
-ggplot(data, aes(x = factor(riego), y = spad_83)) +  # Asegúrate de que "spad_29" sea el nombre correcto
-  geom_boxplot(fill = "lightblue", color = "darkblue") +
-  xlab("Tratamiento de Riego") + 
-  ylab("Valores de SPAD 29") + 
-  ggtitle("Distribución de SPAD 83 por Tratamientos de Riego") +
-  theme_minimal()  # Elimina el argumento base_rect_size que no está definido
-
-
+library(agricolae)
+# test de Tukey para el factor de riego
+tukey_riego <- HSD.test(modelo,"riego", group = TRUE)
+print (tukey_riego)
 ```
 
 ```{r}
-# Asegúrate de que los paquetes están cargados
-library(readxl)
-library(ggplot2)
+# Test de Tukey para el factor geno
+tukey_geno <- HSD.test(modelo, "geno", group = TRUE)
+print(tukey_geno)
+```
 
-data <- read_excel("eficiencia de riego papa.xlsx")
-head(data)
+```{r}
+# Test de Tukey para la interacción riego:geno
+tukey_interaccion <- HSD.test(modelo,c("riego", "geno"), group = TRUE) 
+print(tukey_interaccion)
+str(tukey_interaccion)
+```
 
+```{r}
+library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(stringr)
+```
 
-# Verificar la estructura
-str(data)
+```{r}
+mc <- tukey_interaccion$groups%>%
+  rownames_to_column("tr at")%>%
+  separate(`tr at`, c("riego", "geno"))
+str(mc)
+```
 
-### Gráfico en ggplot2
-ggplot(data, aes(x = geno, y = lfa, fill = riego)) + 
-  geom_col(position = position_dodge()) + 
-  geom_text(aes(label = round(lfa, 1)), position = position_dodge(0.9), vjust = -0.5) + 
-  labs(x = "Geno", y = "LFA", fill = "Riego") + 
+## Gráfica en ggplot 2
+
+```{r}
+ggplot(mc, aes(x = geno, y = lfa, fill = riego)) + 
+  geom_bar(stat = "identity", position = position_dodge()) + 
+  geom_text(aes(label = groups), position = position_dodge(0.9), vjust = -0.5) + 
+  labs(x = "variedad", y = "LFA", fill = "Riego") + 
   theme_minimal() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-![](images/clipboard-4271632721.png)
+## Comparación de Medias: emmeans
 
 ```{r}
-install.packages("emmeans")
 library(emmeans)
+mc <- emmeans(modelo, ~ riego * geno)
+mc <- emmeans(modelo, ~ riego | geno)
+mc <- emmeans(modelo, ~ geno | riego) %>% 
+  as.data.frame()
+
+mc
+
+```
+
+### Plot
+
+```{r}
+ggplot(mc, aes(x = geno, y = emmean, fill = riego)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  labs(x = "Variedad", y = "LFA", fill = "Riego") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
 ```
