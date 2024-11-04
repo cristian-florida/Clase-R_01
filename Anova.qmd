@@ -6,28 +6,29 @@ editor: visual
 output-file: index
 ---
 
-## Quarto
+# 1° llamamos a la base de datos
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+## A) Lectura de datos desde google shets
 
 ```{r}
-1 + 1
+# Cargar el script desde inkaverse
+source('https://inkaverse.com/setup.r')
+
+# URL de la hoja de cálculo de Google Sheets
+url <- "https://docs.google.com/spreadsheets/d/15r7ZwcZZHbEgltlF6gSFvCTFA-CFzVBWwg3mFlRyKPs/edit?gid=172957346#gid=172957346"
+gs <- as_sheets_id(url)
+
+fb <- gs %>%
+  range_read("fb")
+
+View(fb)
+
+1# Mostrar la estructura de 'fb'
+str(fb)
+
 ```
 
-You can add options to executable code like this
-
-```{r}
-#| echo: false
-2 * 2
-```
-
-The `echo: false` option disables the printing of code (only output is displayed).
-
-#FB
+## Lectura de datos desde la base de datos del proyecto
 
 ```{r}
 library(readxl)
@@ -146,3 +147,72 @@ ggplot(mc, aes(x = geno, y = emmean, fill = riego)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
+
+# Análisis Multivariado
+
+## Correlación
+
+### 1° Examinamos los datos y verificamos si no existen valores faltantes o atípicos.
+
+```{r}
+# Comprobar si hay valores NA (faltantes)
+sum(is.na(data))
+# Estadísticas descriptivas
+summary(data)
+```
+
+### 2° Escogemos las variables para el análisis de evaluación
+
+```{r}
+
+# O usa un conjunto de datos de ejemplo para probar (como mtcars)
+data <- mtcars
+
+# Verifica que 'data' esté correctamente cargado
+print(data)
+
+# Seleccionar solo las variables numéricas
+data_numeric <- data[, sapply(data, is.numeric)]
+
+# Verifica que 'data_numeric' no esté vacío
+print(data_numeric)
+
+# Crear matriz de correlación
+correlation_matrix <- cor(data_numeric, method = "pearson")
+print(correlation_matrix)
+
+```
+
+```{r}
+# Seleccionamos solo las variables numéricas
+data_numeric <- data[, sapply(data, is.numeric)]
+# Creamos una matriz de correlación
+correlation_matrix <- cor(data_numeric, method = "pearson")
+print(correlation_matrix)
+
+```
+
+### Vizualización de la matriz evaluada
+
+```{r}
+# Instalar paquetes necesarios
+install.packages("corrplot")
+install.packages("ggcorrplot")
+
+library(corrplot)
+# Generar el gráfico de correlación
+corrplot(correlation_matrix, method = "color", type = "upper", 
+         tl.col = "black", tl.srt = 45, addCoef.col = "black")
+
+```
+
+#### Visualización con`ggcorrplot`
+
+```{r}
+library(ggcorrplot)
+# Generar el gráfico de correlación
+ggcorrplot(correlation_matrix, type = "upper", lab = TRUE, lab_size = 3,
+           colors = c("red", "white", "blue"))
+
+```
+
