@@ -1,9 +1,16 @@
 ---
 title: "Florida_web"
 author: "Cristian Ruben Florida Garcia"
-format: html
-editor: visual
-output-file: index
+format:
+  html:
+   toc: true
+   toc-location: left
+   embed-resources: true
+   number-sections: true
+   output-file: index
+   theme: darkly
+editor_options: 
+  chunk_output_type: consolex
 ---
 
 # 1° llamamos a la base de datos
@@ -195,24 +202,41 @@ print(correlation_matrix)
 ### Vizualización de la matriz evaluada
 
 ```{r}
-# Instalar paquetes necesarios
-install.packages("corrplot")
-install.packages("ggcorrplot")
+library(psych)
 
-library(corrplot)
-# Generar el gráfico de correlación
-corrplot(correlation_matrix, method = "color", type = "upper", 
-         tl.col = "black", tl.srt = 45, addCoef.col = "black")
-
+fb %>% 
+  select_if(is.numeric) %>% 
+  dplyr::select(!c("block")) %>% 
+  pairs.panels(x = .
+               , hist.col="red"
+               , pch = 21
+               , stars = TRUE
+               , scale = FALSE
+               , lm = TRUE
+               ) 
 ```
 
-#### Visualización con`ggcorrplot`
+#### PCA:**Análisis de componentes principales**
 
 ```{r}
-library(ggcorrplot)
-# Generar el gráfico de correlación
-ggcorrplot(correlation_matrix, type = "upper", lab = TRUE, lab_size = 3,
-           colors = c("red", "white", "blue"))
+library(FactoMineR)
 
+mv <- fb %>% 
+  group_by(riego, geno) %>% 
+  summarise(across(where(is.numeric), ~ mean(., na.rm = TRUE))) %>% 
+  PCA(scale.unit = T, quali.sup = c(1:4), graph = F)
+
+
+p1 <- plot(mv
+     , choix="ind"
+     , habillage=1
+     , label = "ind"
+     )
+
+
+p2 <- plot(mv
+     , choix="var")
+
+list(p1, p2) %>% 
+  plot_grid(plotlist = ., nrow = 1)
 ```
-
