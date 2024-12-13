@@ -1,6 +1,6 @@
 ---
-title: "Florida_web"
-author: "Cristian Ruben Florida Garcia"
+title: "Etiquetado de Imagenes"
+authors: "Cristian Ruben Florida Garcia, Alexandra Lucia Goicochea Gonzales, Diomer Mendoza Huaman, Lluliana MAs Cruz, Michel Johh Lopez Ollaguez, Giancarlo Castro Caman"
 format:
   html:
    toc: true
@@ -13,230 +13,159 @@ editor_options:
   chunk_output_type: consolex
 ---
 
-# 1° llamamos a la base de datos
+# INTRODUCCIÓN
 
-## A) Lectura de datos desde google shets
+La visión por computadora, un campo crucial de la inteligencia artificial, depende en gran medida de la calidad de los datos utilizados para entrenar sus modelos. Este informe explora la importancia crítica de la anotación de imágenes en el desarrollo de modelos de visión por computadora utilizando ANACONDA. La precisión y el rigor en el etiquetado de imágenes determinan directamente el rendimiento, la fiabilidad y la eficacia de los sistemas de IA que procesan información visual, desde la identificación de objetos hasta la comprensión de escenas complejas.
 
-```{r}
-# Cargar el script desde inkaverse
-source('https://inkaverse.com/setup.r')
+La anotación de imágenes se realiza mediante diversas técnicas, adaptadas a las necesidades específicas de cada aplicación. Destacan tres enfoques principales: el etiquetado de objetos, que utiliza cuadros delimitadores para identificar regiones de interés; la segmentación semántica, que asigna una etiqueta a cada píxel de la imagen, permitiendo una clasificación más granular; y la localización de puntos clave, que identifica puntos específicos relevantes dentro de la imagen, como articulaciones en una imagen de una persona. Cada método presenta ventajas y desventajas, determinando la elección según la complejidad de la tarea y la información requerida por el modelo de IA además una ventaja muy clara es el ahorro de tiempo.
 
-# URL de la hoja de cálculo de Google Sheets
-url <- "https://docs.google.com/spreadsheets/d/15r7ZwcZZHbEgltlF6gSFvCTFA-CFzVBWwg3mFlRyKPs/edit?gid=172957346#gid=172957346"
-gs <- as_sheets_id(url)
+Obtener datos de entrenamiento para modelos de visión artificial implica dos enfoques principales para la anotación de imágenes: la anotación manual, realizada por humanos y caracterizada por su alta precisión pero también por su elevado coste y tiempo de ejecución; y la anotación automática, que emplea algoritmos y herramientas para acelerar el proceso, aunque a menudo requiere supervisión humana para corregir errores y asegurar la calidad de los datos anotados. La elección entre ambos métodos depende del balance entre precisión, coste y tiempo disponible.
 
-fb <- gs %>%
-  range_read("fb")
+La precisión de los modelos de visión artificial se basa en la calidad de los datos de entrenamiento.  Si la anotación de estos datos es imprecisa o inconsistente, el modelo resultante será poco fiable e inexacto.  Por lo tanto, la calidad de la anotación es crucial para crear sistemas de IA robustos y confiables en el campo de la visión artificial.  Anaconda, como entorno de desarrollo, facilita la gestión de las herramientas y bibliotecas necesarias para mejorar la calidad de los datos de entrenamiento y, en consecuencia, la precisión de los modelos.
 
-View(fb)
+# OBJETIVOS 
 
-1# Mostrar la estructura de 'fb'
-str(fb)
+**Objetivo general**
 
-```
+-   Desarrollar un modelo de visión por computadora utilizando herramientas de análisis de datos en Anaconda para procesar, etiquetar y analizar imágenes de hojas de *Citrus sinensis*, mejorando la precisión y confiabilidad en la identificación de características visuales mediante el uso de datos de entrenamiento de alta calidad.
 
-## Lectura de datos desde la base de datos del proyecto
+**Objetivos específicos**
 
-```{r}
-library(readxl)
+-    Implementar un flujo de trabajo para la captura, organización y anotación de imágenes utilizando herramientas como Label Studio, asegurando la calidad de los datos mediante la asignación precisa de etiquetas en un formato estándar como COCO.
 
-data <- read_excel("eficiencia de riego papa.xlsx")
-head(data)
-```
+-   Evaluar la utilidad de incluir referencias visuales (como monedas) para garantizar consistencia en la escala y precisión en el procesamiento de imágenes durante el entrenamiento del modelo.
 
-# Modelo lineal
+-    Analizar el impacto de la anotación manual frente a técnicas automáticas en la calidad de los datos etiquetados y su influencia en el rendimiento del modelo de visión artificial desarrollado.
 
-```{r}
-modelo <- lm(formula = lfa ~ block + geno + riego + riego*geno, data = data)
- 
+-   Validar y optimizar el modelo de visión por computadora mediante un conjunto representativo de imágenes procesadas, asegurando su aplicabilidad en el análisis visual en el contexto de la agricultura.
 
-anova(modelo)
+# MATERIALES Y MÉTODOS
 
-```
+## MATERIALES
 
-# Blox plot
+### Equipos y Herramientas:
 
-```{r}
-  install.packages("ggplot2", repos = "https://cloud.r-project.org/")
+-   Tijera para la colecta de las muestras de hojas de naranja.
 
-library (ggplot2)
-ggplot(data, aes(x = block, y = lfa, fill = block)) +
-  geom_boxplot(outlier.colour = "red", outlier.shape = 16, outlier.size = 2) +  # Personaliza los outliers
-  geom_jitter(width = 0.2, alpha = 0.5) +  # Añade puntos de datos con un poco de dispersión
-  labs(title = "Box Plot de lfa por Block", x = "Block", y = "lfa") +
-  theme_minimal()
+-   Dispositivo celular para la toma de la imagen para capturar fotografías de hojas de naranja y las monedas.
 
-```
+Computadoras con capacidad para ejecutar entornos de desarrollo y procesamiento de datos.
 
-#Grafico
+**Software:**
 
-```{r}
+-   **Anaconda:** Plataforma para usar herramientas de análisis de datos y aprendizaje automático, como Python y sus bibliotecas.
 
-```
+-   **Label Studio:** Programa para etiquetar imágenes y agregarles características específicas.
 
-```{r}
+-   **RStudio:** Aplicación para análisis de datos y gráficos, útil para evaluar modelos y estudiar su impacto en agricultura.
 
-```
+### Fotos:
 
-## 2- Comparación de medias
+En total se usaron 50 fotos de hojas de *Citrus sinensis* y una moneda de un nuevo sol para el tamaño de referencia, tal como se muestra en la Figura 1.
 
-```{r}
-options(repos = c(CRAN = "https://cloud.r-project.org/"))
-install.packages("agricolae")
-```
+**Figura 1:** Fotos de hojas de *Citrus sinensis* y moneda de un sol.
 
-```{r}
-library(agricolae)
-# test de Tukey para el factor de riego
-tukey_riego <- HSD.test(modelo,"riego", group = TRUE)
-print (tukey_riego)
-```
+![](images/Colash de fotos.png){fig-align="center"}
 
-```{r}
-# Test de Tukey para el factor geno
-tukey_geno <- HSD.test(modelo, "geno", group = TRUE)
-print(tukey_geno)
-```
+## **MÉTODOS**
 
-```{r}
-# Test de Tukey para la interacción riego:geno
-tukey_interaccion <- HSD.test(modelo,c("riego", "geno"), group = TRUE) 
-print(tukey_interaccion)
-str(tukey_interaccion)
-```
+### **Toma de imágenes:**
 
-```{r}
-library(tidyverse)
-library(dplyr)
-library(tidyr)
-library(purrr)
-library(stringr)
-```
+Se utilizó un celular para tomar 50 fotografías de hojas de ***Citrus sinensis*** (naranja), esto junto a una moneda de nuevo sol, ya que nos ayudara como una referencia en la escala.
 
-```{r}
-mc <- tukey_interaccion$groups%>%
-  rownames_to_column("tr at")%>%
-  separate(`tr at`, c("riego", "geno"))
-str(mc)
-```
+### **Selección de Muestra:**
 
-## Gráfica en ggplot 2
+De las 50 imágenes fotografiadas, se hizo una selección de las mejores 6 imágenes como muestra representativa para el entrenamiento del modelo.
 
-```{r}
-ggplot(mc, aes(x = geno, y = lfa, fill = riego)) + 
-  geom_bar(stat = "identity", position = position_dodge()) + 
-  geom_text(aes(label = groups), position = position_dodge(0.9), vjust = -0.5) + 
-  labs(x = "variedad", y = "LFA", fill = "Riego") + 
-  theme_minimal() + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-```
+### **Organización y procesamiento de Imágenes:**
 
-## Comparación de Medias: emmeans
+-   Creamos un nuevo proyecto, se asigna un nombre y seleccionamos la plantilla para etiquetar imágenes.
 
-```{r}
-library(emmeans)
-mc <- emmeans(modelo, ~ riego * geno)
-mc <- emmeans(modelo, ~ riego | geno)
-mc <- emmeans(modelo, ~ geno | riego) %>% 
-  as.data.frame()
+-    De las 50 imágenes que fueron importadas en Label studio, se han procesado cada una para luego seleccionar 6 imágenes y subir a la página web.
 
-mc
+-    Se hace un etiquetado de las imágenes, esto con las etiquetas: leaft y coin.
 
-```
+-   Procedemos a exportar las imágenes en formato COCO.
 
-### Plot
+### **Link del drive donde se encuentran las imágenes**
 
-```{r}
-ggplot(mc, aes(x = geno, y = emmean, fill = riego)) +
-  geom_bar(stat = "identity", position = position_dodge()) +
-  labs(x = "Variedad", y = "LFA", fill = "Riego") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+<https://drive.google.com/drive/folders/1T7oAOP9Do1kn3HEpsVRFvO0Zo5kbwhBH>
 
-```
+# MARCO TEÓRICO
 
-# Análisis Multivariado
+## **MiniConda: Instalador mínimo de Conda**
 
-## Correlación
+-   **¿Qué es MiniConda?**\
+    MiniConda es una versión ligera del gestor de paquetes y entornos Conda. Combina:
 
-### 1° Examinamos los datos y verificamos si no existen valores faltantes o atípicos.
+    -   **Conda**, que es el núcleo para la gestión de paquetes y entornos virtuales.
 
-```{r}
-# Comprobar si hay valores NA (faltantes)
-sum(is.na(data))
-# Estadísticas descriptivas
-summary(data)
-```
+    -    **Python**, proporcionando una instalación básica del lenguaje.
 
-### 2° Escogemos las variables para el análisis de evaluación
+    -    **Paquetes esenciales**, que incluyen herramientas mínimas necesarias para comenzar.
 
-```{r}
+-   **Relación con Conda y Anaconda:**
 
-# O usa un conjunto de datos de ejemplo para probar (como mtcars)
-data <- mtcars
+    -   **Conda:** Es el gestor principal que permite instalar y administrar paquetes, resolver dependencias y crear entornos aislados para diferentes proyectos.
 
-# Verifica que 'data' esté correctamente cargado
-print(data)
+    -    **MiniConda:** Es una instalación básica de Conda que se centra en ser compacta y eficiente, ideal para usuarios que prefieren instalar únicamente los paquetes que necesitan.
 
-# Seleccionar solo las variables numéricas
-data_numeric <- data[, sapply(data, is.numeric)]
+    -   **Anaconda:** Incluye MiniConda y una gran cantidad de paquetes preinstalados (como bibliotecas de ciencia de datos y aprendizaje automático), pero ocupa más espacio y requiere mayor tiempo de instalación.
 
-# Verifica que 'data_numeric' no esté vacío
-print(data_numeric)
+## CARGADO DE IMAGENES A LA PLATAFORMA DE ANACONDA.
 
-# Crear matriz de correlación
-correlation_matrix <- cor(data_numeric, method = "pearson")
-print(correlation_matrix)
+Para trabajar con imágenes en Anaconda utilizando herramientas basadas en Python, es fundamental seguir un flujo bien estructurado que incluya la preparación, carga y análisis de las imágenes. A continuación, se describen los pasos esenciales y las herramientas recomendadas para lograrlo:
 
-```
+### **Preparación de las imágenes**
 
-```{r}
-# Seleccionamos solo las variables numéricas
-data_numeric <- data[, sapply(data, is.numeric)]
-# Creamos una matriz de correlación
-correlation_matrix <- cor(data_numeric, method = "pearson")
-print(correlation_matrix)
+Antes de comenzar a trabajar con las imágenes tenemos que asegúrarnos de que estén organizadas en su entorno de trabajo:
 
-```
+-   **Ubicación de las imágenes:** Guardamos las imágenes en el mismo directorio o archivo. Esto facilita el acceso y evita la necesidad de rutas complejas.
 
-### Vizualización de la matriz evaluada
+-   **Rutas absolutas:** Si decide mantener las imágenes en una carpeta diferente, identifique su ruta completa (por ejemplo, `C:/MisProyectos/imagenes/foto.jpg`) para evitar errores al cargar.
 
-```{r}
-library(psych)
+### Herramientas para cargar imágenes
 
-fb %>% 
-  select_if(is.numeric) %>% 
-  dplyr::select(!c("block")) %>% 
-  pairs.panels(x = .
-               , hist.col="red"
-               , pch = 21
-               , stars = TRUE
-               , scale = FALSE
-               , lm = TRUE
-               ) 
-```
+En Anaconda, tienes diversas herramientas que se adaptan a diferentes estilos de trabajo:
 
-#### PCA:**Análisis de componentes principales**
+-   **Jupyter Notebook:** Perfecto para experimentación interactiva y proyectos educativos.
 
-```{r}
-library(FactoMineR)
+-   **Spyder:** Ideal para escribir y ejecutar scripts estructurados en Python.
 
-mv <- fb %>% 
-  group_by(riego, geno) %>% 
-  summarise(across(where(is.numeric), ~ mean(., na.rm = TRUE))) %>% 
-  PCA(scale.unit = T, quali.sup = c(1:4), graph = F)
+-   **Anaconda Navigator:** Permite gestionar entornos de desarrollo y trabajar con aplicaciones avanzadas como Streamlit o Dash para análisis interactivo de imágenes.
 
+### Métodos para subir imagenes a Label studio:
 
-p1 <- plot(mv
-     , choix="ind"
-     , habillage=1
-     , label = "ind"
-     )
+-   Accede a Label Studio a través del navegador en `http://localhost:8080`, o empleando el codigo "label-studio start" en Anaconda Prompt.
 
+-   Crea un proyecto nuevo y selecciona la opción para cargar datos desde tu sistema local.
 
-p2 <- plot(mv
-     , choix="var")
+-   Arrastra y suelta tus imágenes, o selecciona la carpeta donde están ubicada
 
-list(p1, p2) %>% 
-  plot_grid(plotlist = ., nrow = 1)
-```
+# RESULTADOS
+
+La imagen muestra hojas con un contorno o relleno resaltado en color celeste, acompañadas de las monedas de color morado.
+
+-   **Las hojas** han sido segmentadas (identificadas y separadas del fondo). El color celeste indica el área identificada para medición o análisis, como superficie, forma o perímetro.
+
+-   **Los círculos morados** representan una referencia de escala (moneda de un sol),
+
+**Figura 2: Muestras procesadas por Anaconda de hojas de *Citrus sinensis* y moneda “Nuevo sol”**
+
+![](images/Captura de pantalla 2024-12-12 205122.png)
+
+# CONCLUSIONES
+
+La anotación de imágenes es un pilar fundamental en el desarrollo de modelos de visión por computadora, ya que determina la precisión y la capacidad de generalización de los algoritmos. La crítica rigurosa y sistemática de este proceso es esencial para garantizar que las etiquetas sean precisas, coherentes y representativas de los datos reales, minimizando errores y sesgos que podrían computadora.
+
+El uso de herramientas como Anaconda fortalece este proceso al proporcionar un entorno integral para gestionar, analizar y depurar conjuntos de datos. Estas herramientas facilitan la identificación de problemas como anotaciones incorrectas, inconsistencias o carencias en la representatividad de los datos, optimizando el conjunto de entrenamiento y, en consecuencia, el diseño.
+
+En definitiva, una revisión crítica de las anotaciones, respaldada por plataformas como Anaconda, asegura la creación de modelos más confiables y efectivos, promoviendo resultados más precisos y aplicaciones más éticas y robustas en el campo de la visión.
+
+# REFERENCIAS
+
+Isern, G. F., Vila, J. C., Olasagarre, M. B. H., & Blanco, E. (2023). Entornos y contenedores. <https://eines-informatiques.recursos.uoc.edu/wp-content/uploads/sites/6/2023/09/Entornos-y-contenedores.pdf>
+
+Anaconda, Inc. (2024). “Conda: Package and environment management.” https://docs.conda.io/en/latest/
+
+“Miniconda: The minimal conda installer.” (2020). Anaconda Documentation. https://docs.conda.io/en/latest/miniconda.html
