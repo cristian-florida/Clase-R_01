@@ -39,6 +39,57 @@ La precisión de los modelos de visión artificial se basa en la calidad de los 
 
 -   Validar y optimizar el modelo de visión por computadora mediante un conjunto representativo de imágenes procesadas, asegurando su aplicabilidad en el análisis visual en el contexto de la agricultura.
 
+# MARCO TEÓRICO
+
+## **MiniConda: Instalador mínimo de Conda**
+
+-   **¿Qué es MiniConda?**\
+    MiniConda es una versión ligera del gestor de paquetes y entornos Conda. Combina:
+
+    -   **Conda**, que es el núcleo para la gestión de paquetes y entornos virtuales.
+
+    -    **Python**, proporcionando una instalación básica del lenguaje.
+
+    -    **Paquetes esenciales**, que incluyen herramientas mínimas necesarias para comenzar.
+
+-   **Relación con Conda y Anaconda:**
+
+    -   **Conda:** Es el gestor principal que permite instalar y administrar paquetes, resolver dependencias y crear entornos aislados para diferentes proyectos.
+
+    -    **MiniConda:** Es una instalación básica de Conda que se centra en ser compacta y eficiente, ideal para usuarios que prefieren instalar únicamente los paquetes que necesitan.
+
+    -   **Anaconda:** Incluye MiniConda y una gran cantidad de paquetes preinstalados (como bibliotecas de ciencia de datos y aprendizaje automático), pero ocupa más espacio y requiere mayor tiempo de instalación.
+
+## CARGADO DE IMAGENES A LA PLATAFORMA DE ANACONDA.
+
+Para trabajar con imágenes en Anaconda utilizando herramientas basadas en Python, es fundamental seguir un flujo bien estructurado que incluya la preparación, carga y análisis de las imágenes. A continuación, se describen los pasos esenciales y las herramientas recomendadas para lograrlo:
+
+### **Preparación de las imágenes**
+
+Antes de comenzar a trabajar con las imágenes tenemos que asegúrarnos de que estén organizadas en su entorno de trabajo:
+
+-   **Ubicación de las imágenes:** Guardamos las imágenes en el mismo directorio o archivo. Esto facilita el acceso y evita la necesidad de rutas complejas.
+
+-   **Rutas absolutas:** Si decide mantener las imágenes en una carpeta diferente, identifique su ruta completa (por ejemplo, `C:/MisProyectos/imagenes/foto.jpg`) para evitar errores al cargar.
+
+### Herramientas para cargar imágenes
+
+En Anaconda, tienes diversas herramientas que se adaptan a diferentes estilos de trabajo:
+
+-   **Jupyter Notebook:** Perfecto para experimentación interactiva y proyectos educativos.
+
+-   **Spyder:** Ideal para escribir y ejecutar scripts estructurados en Python.
+
+-   **Anaconda Navigator:** Permite gestionar entornos de desarrollo y trabajar con aplicaciones avanzadas como Streamlit o Dash para análisis interactivo de imágenes.
+
+### Métodos para subir imagenes a Label studio:
+
+-   Accede a Label Studio a través del navegador en `http://localhost:8080`, o empleando el codigo "label-studio start" en Anaconda Prompt.
+
+-   Crea un proyecto nuevo y selecciona la opción para cargar datos desde tu sistema local.
+
+-   Arrastra y suelta tus imágenes, o selecciona la carpeta donde están ubicada
+
 # MATERIALES Y MÉTODOS
 
 ## MATERIALES
@@ -90,57 +141,6 @@ De las 50 imágenes fotografiadas, se hizo una selección de las mejores 6 imág
 ### **Link del drive donde se encuentran las imágenes**
 
 <https://drive.google.com/drive/folders/1T7oAOP9Do1kn3HEpsVRFvO0Zo5kbwhBH>
-
-# MARCO TEÓRICO
-
-## **MiniConda: Instalador mínimo de Conda**
-
--   **¿Qué es MiniConda?**\
-    MiniConda es una versión ligera del gestor de paquetes y entornos Conda. Combina:
-
-    -   **Conda**, que es el núcleo para la gestión de paquetes y entornos virtuales.
-
-    -    **Python**, proporcionando una instalación básica del lenguaje.
-
-    -    **Paquetes esenciales**, que incluyen herramientas mínimas necesarias para comenzar.
-
--   **Relación con Conda y Anaconda:**
-
-    -   **Conda:** Es el gestor principal que permite instalar y administrar paquetes, resolver dependencias y crear entornos aislados para diferentes proyectos.
-
-    -    **MiniConda:** Es una instalación básica de Conda que se centra en ser compacta y eficiente, ideal para usuarios que prefieren instalar únicamente los paquetes que necesitan.
-
-    -   **Anaconda:** Incluye MiniConda y una gran cantidad de paquetes preinstalados (como bibliotecas de ciencia de datos y aprendizaje automático), pero ocupa más espacio y requiere mayor tiempo de instalación.
-
-## CARGADO DE IMAGENES A LA PLATAFORMA DE ANACONDA.
-
-Para trabajar con imágenes en Anaconda utilizando herramientas basadas en Python, es fundamental seguir un flujo bien estructurado que incluya la preparación, carga y análisis de las imágenes. A continuación, se describen los pasos esenciales y las herramientas recomendadas para lograrlo:
-
-### **Preparación de las imágenes**
-
-Antes de comenzar a trabajar con las imágenes tenemos que asegúrarnos de que estén organizadas en su entorno de trabajo:
-
--   **Ubicación de las imágenes:** Guardamos las imágenes en el mismo directorio o archivo. Esto facilita el acceso y evita la necesidad de rutas complejas.
-
--   **Rutas absolutas:** Si decide mantener las imágenes en una carpeta diferente, identifique su ruta completa (por ejemplo, `C:/MisProyectos/imagenes/foto.jpg`) para evitar errores al cargar.
-
-### Herramientas para cargar imágenes
-
-En Anaconda, tienes diversas herramientas que se adaptan a diferentes estilos de trabajo:
-
--   **Jupyter Notebook:** Perfecto para experimentación interactiva y proyectos educativos.
-
--   **Spyder:** Ideal para escribir y ejecutar scripts estructurados en Python.
-
--   **Anaconda Navigator:** Permite gestionar entornos de desarrollo y trabajar con aplicaciones avanzadas como Streamlit o Dash para análisis interactivo de imágenes.
-
-### Métodos para subir imagenes a Label studio:
-
--   Accede a Label Studio a través del navegador en `http://localhost:8080`, o empleando el codigo "label-studio start" en Anaconda Prompt.
-
--   Crea un proyecto nuevo y selecciona la opción para cargar datos desde tu sistema local.
-
--   Arrastra y suelta tus imágenes, o selecciona la carpeta donde están ubicada
 
 # RESULTADOS
 
